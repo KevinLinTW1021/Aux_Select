@@ -129,22 +129,30 @@ void main() {
    
     while(1) {
         LED_A3 = ON;
+        LED_A4 = OFF;
+        LED_A5 = OFF;
         CD4052_A = LOW;
         CD4052_B = LOW;
 
         if (SELECT_TRIGGER_B0 == LOW) {
             LED_A3 = ON;
+            LED_A4 = OFF;
+            LED_A5 = OFF;
             CD4052_A = LOW;
             CD4052_B = LOW;
         }
         
         if (SELECT_TRIGGER_B1 == LOW) {
+            LED_A3 = OFF;
             LED_A4 = ON;
+            LED_A5 = OFF;
             CD4052_A = HIGH;
             CD4052_B = LOW;
         }
 
         if (SELECT_TRIGGER_B2 == LOW) {
+            LED_A3 = OFF;
+            LED_A4 = OFF;
             LED_A5 = ON;
             CD4052_A = LOW;
             CD4052_B = HIGH;
