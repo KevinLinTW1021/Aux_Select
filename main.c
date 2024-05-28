@@ -3,7 +3,7 @@
 // CONFIG1
 #pragma config FOSC = INTRC_NOCLKOUT// Oscillator Selection bits (INTOSCIO oscillator: I/O function on RA6/OSC2/CLKOUT pin, I/O function on RA7/OSC1/CLKIN)
 #pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT disabled and can be enabled by SWDTEN bit of the WDTCON register)
-#pragma config PWRTE = OFF       // Power-up Timer Enable bit (PWRT enabled)
+#pragma config PWRTE = ON       // Power-up Timer Enable bit (PWRT enabled)
 #pragma config MCLRE = ON       // RE3/MCLR pin function select bit (RE3/MCLR pin function is MCLR)
 #pragma config CP = OFF         // Code Protection bit (Program memory code protection is disabled)
 #pragma config CPD = OFF        // Data Code Protection bit (Data memory code protection is disabled)
@@ -62,7 +62,7 @@
 #define PB6 PORTBbits.RB6
 #define PB7 PORTBbits.RB7
 
-#define OPTION_REG OPTION_REGbits.nRBPU
+#define OPTION_REG_ALL OPTION_REGbits.nRBPU
 
 #define WPUB_B0 WPUBbits.WPUB0
 #define WPUB_B1 WPUBbits.WPUB1
@@ -96,7 +96,7 @@ void main() {
     
     
     ANSELH = OFF;
-    OPTION_REG = ON;
+    OPTION_REG_ALL = OFF;
     
     WPUB_B0 = ON;
     WPUB_B1 = ON;
