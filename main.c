@@ -73,39 +73,73 @@
 #define WPUB_B6 WPUBbits.WPUB6
 #define WPUB_B7 WPUBbits.WPUB7
 
-void main() {
-    ANSEL = OFF;
-    
+void setFirstGroup() {
     TA0 = OUTPUT;
     TA1 = OUTPUT;
-    TA2 = OUTPUT;
+    
+    WPUB_B0 = LOW;
+    WPUB_B1 = HIGH;
+    WPUB_B2 = HIGH;
+    
     TA3 = OUTPUT;
     TA4 = OUTPUT;
     TA5 = OUTPUT;
-    TA6 = OUTPUT;
-    TA7 = OUTPUT;
+    LED_A3 = ON;
+    LED_A4 = OFF;
+    LED_A5 = OFF;
     
     CD4052_A = LOW;
     CD4052_B = LOW;
-    PA2 = LOW;
-    LED_A3 = LOW;
-    LED_A4 = LOW;
-    LED_A5 = LOW;
-    PA6 = LOW;
-    PA7 = LOW;
+}
+
+void setSecondGroup() {
+    TA0 = OUTPUT;
+    TA1 = OUTPUT;
     
+    WPUB_B0 = HIGH;
+    WPUB_B1 = LOW;
+    WPUB_B2 = HIGH;
+    
+    TA3 = OUTPUT;
+    TA4 = OUTPUT;
+    TA5 = OUTPUT;
+    
+    LED_A3 = OFF;
+    LED_A4 = ON;
+    LED_A5 = OFF;
+    
+    CD4052_A = HIGH;
+    CD4052_B = LOW;
+}
+
+void setThirdGroup() {
+    TA0 = OUTPUT;
+    TA1 = OUTPUT;
+    
+    WPUB_B0 = HIGH;
+    WPUB_B1 = HIGH;
+    WPUB_B2 = LOW;
+    
+    TA3 = OUTPUT;
+    TA4 = OUTPUT;
+    TA5 = OUTPUT;
+    
+    LED_A3 = OFF;
+    LED_A4 = OFF;
+    LED_A5 = ON;
+    
+    CD4052_A = LOW;
+    CD4052_B = HIGH;
+}
+
+
+
+void main() {
+    ANSEL = OFF;
     
     ANSELH = OFF;
     OPTION_REG_ALL = OFF;
-    
-    WPUB_B0 = ON;
-    WPUB_B1 = ON;
-    WPUB_B2 = ON;
-    WPUB_B3 = OFF;
-    WPUB_B4 = OFF;
-    WPUB_B5 = OFF;
-    WPUB_B6 = OFF;
-    WPUB_B7 = OFF;
+   
     
     TB0 = INPUT;
     TB1 = INPUT;
@@ -116,48 +150,29 @@ void main() {
     TB6 = OUTPUT;
     TB7 = OUTPUT;
     
-    SELECT_TRIGGER_B0 = HIGH;
-    SELECT_TRIGGER_B1 = HIGH;
-    SELECT_TRIGGER_B2 = HIGH;
+
     PB3 = LOW;
     PB4 = LOW;
     PB5 = LOW;
     PB6 = LOW;
     PB7 = LOW;
     
-
-   
+    setFirstGroup();
+    
     while(1) {
-        LED_A3 = ON;
-        LED_A4 = OFF;
-        LED_A5 = OFF;
-        CD4052_A = LOW;
-        CD4052_B = LOW;
-
         if (SELECT_TRIGGER_B0 == LOW) {
-            LED_A3 = ON;
-            LED_A4 = OFF;
-            LED_A5 = OFF;
-            CD4052_A = LOW;
-            CD4052_B = LOW;
+            setFirstGroup();
         }
         
         if (SELECT_TRIGGER_B1 == LOW) {
-            LED_A3 = OFF;
-            LED_A4 = ON;
-            LED_A5 = OFF;
-            CD4052_A = HIGH;
-            CD4052_B = LOW;
+            setSecondGroup();
         }
 
         if (SELECT_TRIGGER_B2 == LOW) {
-            LED_A3 = OFF;
-            LED_A4 = OFF;
-            LED_A5 = ON;
-            CD4052_A = LOW;
-            CD4052_B = HIGH;
+            setThirdGroup();
         }
     }
+        
 }
 
 

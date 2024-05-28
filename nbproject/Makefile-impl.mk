@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=AuxSelect
+PROJECTNAME=Aux_Select
 
 # Active Configuration
 DEFAULTCONF=default
