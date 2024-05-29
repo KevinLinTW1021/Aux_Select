@@ -132,6 +132,9 @@ void setThirdGroup() {
     CD4052_B = HIGH;
 }
 
+void delayDebounce() {
+    __delay_ms(100);
+}
 
 
 void main() {
@@ -160,17 +163,30 @@ void main() {
     setFirstGroup();
     
     while(1) {
+        
         if (SELECT_TRIGGER_B0 == LOW) {
+            delayDebounce();
+            if (SELECT_TRIGGER_B0 == LOW) {
             setFirstGroup();
+           }
         }
         
-        if (SELECT_TRIGGER_B1 == LOW) {
+        
+       if (SELECT_TRIGGER_B1 == LOW) { 
+           delayDebounce();
+            if (SELECT_TRIGGER_B1 == LOW) {
             setSecondGroup();
-        }
+           }
+       }
 
+        
+       if (SELECT_TRIGGER_B2 == LOW) {
+           delayDebounce();
         if (SELECT_TRIGGER_B2 == LOW) {
             setThirdGroup();
-        }
+           }
+       }
+        
     }
         
 }
