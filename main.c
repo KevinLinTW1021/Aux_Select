@@ -44,9 +44,15 @@
 #define TB6 TRISBbits.TRISB6
 #define TB7 TRISBbits.TRISB7
 
-#define CD4052_A PORTAbits.RA0
-#define CD4052_B PORTAbits.RA1
-#define PA2 PORTAbits.RA2
+#define TC0 TRISCbits.TRISC0
+#define TC1 TRISCbits.TRISC1
+#define TC2 TRISCbits.TRISC2
+#define TC3 TRISCbits.TRISC3
+#define TC4 TRISCbits.TRISC4
+#define TC5 TRISCbits.TRISC5
+#define TC6 TRISCbits.TRISC6
+#define TC7 TRISCbits.TRISC7
+
 #define LED_A3 PORTAbits.RA3
 #define LED_A4 PORTAbits.RA4
 #define LED_A5 PORTAbits.RA5
@@ -59,8 +65,8 @@
 #define PB3 PORTBbits.RB3
 #define PB4 PORTBbits.RB4
 #define PB5 PORTBbits.RB5
-#define PB6 PORTBbits.RB6
-#define PB7 PORTBbits.RB7
+#define CD4052_A PORTAbits.RA0
+#define CD4052_B PORTAbits.RA1
 
 #define OPTION_REG_ALL OPTION_REGbits.nRBPU
 
@@ -73,9 +79,87 @@
 #define WPUB_B6 WPUBbits.WPUB6
 #define WPUB_B7 WPUBbits.WPUB7
 
+#define LCD_RS PORTCbits.RC0
+#define LCD_EN PORTCbits.RC1
+#define LCD_D4 PORTCbits.RC2
+#define LCD_D5 PORTCbits.RC3
+#define LCD_D6 PORTCbits.RC4
+#define LCD_D7 PORTCbits.RC5
+
+// Function declarations
+void LCD_Command(unsigned char cmd);
+void LCD_Char(unsigned char data);
+void LCD_Init();
+void LCD_String(const char *str);
+void LCD_Nibble(unsigned char nibble);
+void displayText(const char *str);
+
+
+void LCD_Command(unsigned char cmd) {
+    LCD_RS = 0;
+    LCD_Nibble(cmd >> 4);
+    LCD_Nibble(cmd & 0x0F);
+    __delay_ms(2);
+}
+
+void LCD_Char(unsigned char data) {
+    LCD_RS = 1;
+    LCD_Nibble(data >> 4);
+    LCD_Nibble(data & 0x0F);
+    __delay_ms(2);
+}
+
+void LCD_Init() {
+    __delay_ms(20);
+    LCD_Command(0x02);
+    LCD_Command(0x28);
+    LCD_Command(0x0C);
+    LCD_Command(0x06);
+    LCD_Command(0x01);
+    __delay_ms(2);
+}
+
+void LCD_String(const char *str) {
+    while(*str) {
+        LCD_Char(*str++);
+    }
+}
+
+void LCD_Nibble(unsigned char nibble) {
+    LCD_EN = 1;
+    LCD_D4 = (nibble >> 0) & 0x01;
+    LCD_D5 = (nibble >> 1) & 0x01;
+    LCD_D6 = (nibble >> 2) & 0x01;
+    LCD_D7 = (nibble >> 3) & 0x01;
+    LCD_EN = 0;
+    __delay_ms(2);
+}
+
+void displayText(const char *str) {
+    TC0 = OUTPUT;
+    TC1 = OUTPUT;
+    TC2 = OUTPUT;
+    TC3 = OUTPUT;
+    TC4 = OUTPUT;
+    TC5 = OUTPUT;
+    
+    LCD_RS = LOW;
+    LCD_EN = LOW;
+    LCD_D4 = LOW;
+    LCD_D5 = LOW;
+    LCD_D6 = LOW;
+    LCD_D7 = LOW;
+    
+    LCD_Init();
+    LCD_String(str);
+    
+}
+
+
 void setFirstGroup() {
     TA0 = OUTPUT;
     TA1 = OUTPUT;
+    TA2 = OUTPUT;
     
     WPUB_B0 = LOW;
     WPUB_B1 = HIGH;
@@ -88,13 +172,20 @@ void setFirstGroup() {
     LED_A4 = OFF;
     LED_A5 = OFF;
     
-    CD4052_A = LOW;
+    TB6 = OUTPUT;
+    TB7 = OUTPUT;
+    
     CD4052_B = LOW;
+    CD4052_A = LOW;
+    
+    displayText("AUX1");
 }
 
 void setSecondGroup() {
     TA0 = OUTPUT;
     TA1 = OUTPUT;
+    TA2 = OUTPUT;
+
     
     WPUB_B0 = HIGH;
     WPUB_B1 = LOW;
@@ -108,13 +199,19 @@ void setSecondGroup() {
     LED_A4 = ON;
     LED_A5 = OFF;
     
-    CD4052_A = HIGH;
+    TB6 = OUTPUT;
+    TB7 = OUTPUT;
+
     CD4052_B = LOW;
+    CD4052_A = HIGH;
+    
+    displayText("AUX2");
 }
 
 void setThirdGroup() {
     TA0 = OUTPUT;
     TA1 = OUTPUT;
+    TA2 = OUTPUT;
     
     WPUB_B0 = HIGH;
     WPUB_B1 = HIGH;
@@ -128,8 +225,12 @@ void setThirdGroup() {
     LED_A4 = OFF;
     LED_A5 = ON;
     
-    CD4052_A = LOW;
-    CD4052_B = HIGH;
+    TB6 = OUTPUT;
+    TB7 = OUTPUT;
+    CD4052_A = HIGH;
+    CD4052_B = LOW;
+    
+    displayText("AUX3");
 }
 
 void delayDebounce() {
@@ -157,8 +258,6 @@ void main() {
     PB3 = LOW;
     PB4 = LOW;
     PB5 = LOW;
-    PB6 = LOW;
-    PB7 = LOW;
     
     setFirstGroup();
     
